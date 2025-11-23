@@ -2,22 +2,20 @@
 #include <Adafruit_GFX.h>
 #include <dht11.h>
 
-#define DHT11PIN 4 // Define the digital pin the DHT11 data line is connected to
-dht11 DHT11; // Create an instance of the DHT11 object
+#define DHT11PIN 4 
+dht11 DHT11; 
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
-// Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
 void setup() {
     Serial.begin(9600);
     
-    // Initialize OLED display
-    if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3C or 0x3D
+    if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { 
         Serial.println("SSD1306 allocation failed");
-        for(;;); // Don't proceed if it fails
+        for(;;); 
     }
     
     delay(2000);
@@ -28,60 +26,38 @@ void setup() {
 void loop() {
     delay(5000); // Read sensor every 5 seconds (5000 ms)
 
-    // Read sensor data
     int chk = DHT11.read(DHT11PIN);
     float t = DHT11.temperature;
     float h = DHT11.humidity;
     
-    // Check if reading was successful
     if (isnan(h) || isnan(t)) {
         Serial.println("Failed to read from DHT sensor!");
         return; // Skip the rest of the loop and try again
     }
 
-    // Clear display for new readings
     display.clearDisplay();
 
-    // --- Display Temperature ---
-    
-    // Set text size for label
     display.setTextSize(1);
-    // Set cursor position (0, 0)
     display.setCursor(0, 0);
-    // Print label
     display.print("Temperature:");
     
-    // Set cursor for value (x=0, y=10)
     display.setCursor(0, 10);
-    // Print temperature value
     display.print(t);
     
-    // Print degree symbol (ASCII 167)
-    // Note: This character may not be available in all font sizes/libraries.
     display.write(167); 
     
-    // Print Celsius unit
     display.print("C");
     
-    // --- Display Humidity ---
     
-    // Set text size for label
     display.setTextSize(1);
-    // Set cursor position (x=0, y=35)
     display.setCursor(0, 35);
-    // Print label
     display.print("Humidity:");
     
-    // Set text size for value
     display.setTextSize(2);
-    // Set cursor for value (x=0, y=45, derived from y=35 label and new size)
     display.setCursor(0, 45); 
-    // Print humidity value
     display.print(h); 
     
-    // Print percentage unit
     display.print("%"); 
 
-    // Update the physical display with the buffer content
     display.display();
 }
