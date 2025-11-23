@@ -1,0 +1,23 @@
+int LedPins[] = {2, 3, 4, 5, 6};
+int numLeds = 5;
+
+void setup() {
+    for (int i = 0; i < numLeds; i++) {
+        pinMode(ledPins[i], OUTPUT);
+    }
+}
+
+void loop() {
+    for (int i = 0; i < numLeds; i++) {
+        lightUp(i);
+    }
+    for (int i = numLeds - 2; i > 0; i--) {
+        lightUp(i);
+    }
+}
+
+void lightUp(int index) {
+    digitalWrite(ledPins[index], HIGH);
+    delay(80);
+    digitalWrite(ledPins[index], LOW);
+}
